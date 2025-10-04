@@ -1,0 +1,52 @@
+# File: .github/workflows/combined-tasks.yml
+
+name: Combined Verification and Caching Tasks
+
+# Define the trigger (runs on every push to the main branch)
+on:
+  push:
+    branches:
+      - main
+
+# -----------------------------------------------------
+# JOB 1: Email Verification Job (Fulfills Requirement 1)
+# -----------------------------------------------------
+jobs:
+  email_verification_job:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # REQUIRED: Step with the email address in the name
+      - name: 23f2002898@ds.study.iitm.ac.in
+        run: echo "Verifying required step name for task 1."
+
+# -----------------------------------------------------
+# JOB 2: Caching Job (Fulfills Requirement 2)
+# -----------------------------------------------------
+  caching_and_check_job:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # REQUIRED: Step to prime the cache with key 'cache-eed60d55'
+      - name: prime-cache-eed60d55
+        uses: actions/cache@v4 # Use v4 (or v3 as specified)
+        id: cache-step # Give it an ID to reference its output
+        with:
+          key: cache-eed60d55
+          path: ~/.npm # Cache a common path like npm dependencies
+
+      # REQUIRED: Step to echo the cache hit/miss result
+      - name: Echo Cache Result
+        run: |
+          # The actions/cache step sets an output variable 'cache-hit'.
+          if [ "${{ steps.cache-step.outputs.cache-hit }}" == "true" ]; then
+            echo "Cache Status: HIT 🎉"
+          else
+            echo "Cache Status: MISS 💔 (Priming cache...)"
+          fi
